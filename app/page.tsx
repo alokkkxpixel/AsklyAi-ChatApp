@@ -1,103 +1,150 @@
-import Image from "next/image";
+"use client"
+
+import InfoPopup from "@/components/InfoPopup";
+import Navbar from "@/components/Navbar";
+import { AiInput } from "@/components/ui/ai-input";
+import ThemeToggleButton from "@/components/ui/theme-toggle-button";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [message, setMessage] = useState("")
+  const [response, setResponse] = useState("")
+  const [streaming, setStreaming] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [streamResponse, setStreamResponse] = useState("")
+
+
+
+
+
+
+  const handleChat = async ()=>{
+      
+    setLoading(true)
+    setResponse("")
+
+    try {
+       
+     const res =  await fetch("/api/chat",{
+        method:"POST",
+        headers: {
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({message})
+      })
+      
+      const data = await res.json()
+      setResponse(data.response)
+
+    } catch (error) {
+      console.log(error)
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
+      console.log(errorMessage)
+      setResponse("Error: " + errorMessage);
+    }
+   setLoading(false)
+     setMessage("")
+  }
+
+
+
+const handleStreamChat = async (): Promise<void> => {
+  setStreaming(true);
+  setStreamResponse("");
+
+  try {
+    const res = await fetch("/api/chatStream", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    const reader = res.body?.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = (await reader?.read()) ?? { done: true, value: undefined };
+
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split("\n");
+
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = JSON.parse(line.slice(6)) as { Content: string };
+          setStreamResponse((prev) => prev + data.Content);
+        }
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    const errorMessage = error instanceof Error ? error.message : "Something went wrong";
+    console.log(errorMessage);
+    setResponse("Error: " + errorMessage);
+  }
+ setMessage("")
+  setStreaming(false);
+};
+
+
+
+  return (
+    <div className="font-sans  bg--400 grid-rows-[20px_1fr_20px] flex flex-col items-center justify-between gap-4 relative">
+
+    <Navbar />
+  
+  <div className="flex flex-col gap-5 bg--500 items-center justify-center min-h-[60vh]  overflow-hidden">
+ <InfoPopup />
+{response || streamResponse ? (
+  <>
+    {response && (
+      <div className="md:w-[50vw] w-[90vw] transition-all duration-100 p-4 dark:bg-zinc-800 bg-zinc-200 rounded-sm">
+        {response}
+      </div>
+    )}
+
+    {streamResponse && (
+      <div className="md:w-[50vw] w-[90vw] p-1 dark:bg-zinc-800 bg-zinc-200 rounded-sm">
+        <div>
+          <h2 className="text-zinc-500">Streaming data</h2>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="p-2">{streamResponse}</div>
+      </div>
+    )}
+
+    {(loading || streaming) && (
+      <div className="dark:text-zinc-400 animate-pulse">AI is thinking...</div>
+    )}
+  </>
+) : (
+  <h1 className="text-lg dark:text-white/70">What's on your mind today?</h1>
+)}
+
+ 
+
+  </div>
+
+
+ 
+    {/* <textarea value={message} onChange={(e)=> setMessage(e.target.value)}  className="w-[95vw] resize-none bg-zinc-800 outline-none p-2 border border-white/50  rounded-md " placeholder="Ask Anything!!"></textarea> */}
+   <div className="w-full ">
+
+    <AiInput message={message} setMessage={setMessage} handleChat={handleChat} handleStreamChat={handleStreamChat} />
+   </div>
+   <div className=" mx-auto text-center text-xs dark:text-zinc-500 mt- p-4 border-t border-zinc-700">
+      <p>
+    ⚡ This is a free demo project. Response times may be slower and answers may
+    not always be as accurate as ChatGPT.
+  </p>
+ 
+ 
+    </div>
+ 
     </div>
   );
+
 }
