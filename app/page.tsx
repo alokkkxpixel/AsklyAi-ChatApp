@@ -120,7 +120,7 @@ const handleStreamChat = async (): Promise<void> => {
     )}
   </>
 ) : (
-  <h1 className="text-lg ">What's on your mind today?</h1>
+  <h1 className="text-lg ">Whats on your mind today?</h1>
 )}
 
  
