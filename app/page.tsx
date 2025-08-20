@@ -86,8 +86,8 @@ const handleStreamChat = async (): Promise<void> => {
     console.log(errorMessage);
     setResponse("Error: " + errorMessage);
   }
- setMessage("")
   setStreaming(false);
+ setMessage("")
 };
 
 
@@ -102,26 +102,26 @@ const handleStreamChat = async (): Promise<void> => {
 {response || streamResponse ? (
   <>
     {response && (
-      <div className="md:w-[50vw] w-[90vw] transition-all duration-100 p-4 dark:bg-zinc-800 bg-zinc-200 rounded-sm">
-        {response}
+      <div className="md:w-[50vw] w-[90vw] transition-all duration-100 p-4  dark:bg-zinc-800 bg-zinc-300  rounded-sm">
+        {response} 
       </div>
     )}
 
     {streamResponse && (
-      <div className="md:w-[50vw] w-[90vw] p-1 dark:bg-zinc-800 bg-zinc-200 rounded-sm">
+      <div className="md:w-[50vw] w-[90vw] p-1  dark:bg-zinc-800 bg-zinc-300 rounded-sm">
         <div>
           <h2 className="text-zinc-500">Streaming data</h2>
         </div>
-        <div className="p-2">{streamResponse}</div>
+        <div className="p-2">{streamResponse} </div>
       </div>
     )}
 
     {(loading || streaming) && (
-      <div className="dark:text-zinc-400 animate-pulse">AI is thinking...</div>
+      <div className="text-zinc-400 animate-pulse">AI is thinking...</div>
     )}
   </>
 ) : (
-  <h1 className="text-lg dark:text-white/70">What's on your mind today?</h1>
+  <h1 className="text-lg ">What's on your mind today?</h1>
 )}
 
  
@@ -135,7 +135,7 @@ const handleStreamChat = async (): Promise<void> => {
 
     <AiInput message={message} setMessage={setMessage} handleChat={handleChat} handleStreamChat={handleStreamChat} />
    </div>
-   <div className=" mx-auto text-center text-xs dark:text-zinc-500 mt- p-4 border-t border-zinc-700">
+   <div className=" mx-auto text-center text-xs dark:text-zinc-300 mt- p-4 border-t border-zinc-700">
       <p>
     ⚡ This is a free demo project. Response times may be slower and answers may
     not always be as accurate as ChatGPT.
