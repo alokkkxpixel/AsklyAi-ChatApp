@@ -22,4 +22,4 @@ The app is fully responsive, supports dark & light themes, and demonstrates real
 📱 Mobile View
 <img src="./public/iPhone12Pro.png" width="250">
 💻 Desktop View
-<img src="./desktop.png" width="500">
+<img src="./public/desktop.png" width="500">
