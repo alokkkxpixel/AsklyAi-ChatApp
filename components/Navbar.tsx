@@ -16,7 +16,7 @@ const Navbar = () => {
   <Github size={24} />
 </Link>
      <h1 className="text-2xl font-medium  font-[Skiper1] ">  Askly </h1>
-      <ThemeToggleButton />
+      <ThemeToggleButton  />
       </div>
     </div>
   )

@@ -3,7 +3,6 @@
 import InfoPopup from "@/components/InfoPopup";
 import Navbar from "@/components/Navbar";
 import { AiInput } from "@/components/ui/ai-input";
-import ThemeToggleButton from "@/components/ui/theme-toggle-button";
 import { useState } from "react";
 
 export default function Home() {
@@ -135,11 +134,25 @@ const handleStreamChat = async (): Promise<void> => {
 
     <AiInput message={message} setMessage={setMessage} handleChat={handleChat} handleStreamChat={handleStreamChat} />
    </div>
-   <div className=" mx-auto text-center text-xs dark:text-zinc-300 mt- p-4 border-t border-zinc-700">
+   <div className=" mx-auto text-center text-xs dark:text-zinc-300  p-2 border-t border-zinc-700">
       <p>
     ⚡ This is a free demo project. Response times may be slower and answers may
     not always be as accurate as ChatGPT.
   </p>
+    <h5 className="text-center text-xs text-zinc-700 dark:text-zinc-300  border-zinc-300 dark:border-zinc-700 pt-1">
+  © {new Date().getFullYear()} Copyright by{" "}
+  <a
+    href="https://github.com/alokkkxpixel/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-sky-600 font-semibold hover:underline"
+  >
+    Alokkkxpixel
+  </a>
+</h5>
+
+  
+ 
  
  
     </div>

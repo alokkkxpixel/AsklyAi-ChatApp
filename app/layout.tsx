@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Askly.ai",
+  title: "AsklyAi-ChatApp",
   description: "Ai powered Chat app",
   icons:{
     icon: "/favicon.ico",
@@ -29,9 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en"
-      className="light"
-       className="dark"
+    <html lang="en" suppressHydrationWarning
+      className="light dark"
+      //  className="dark"
        
                     
                     >

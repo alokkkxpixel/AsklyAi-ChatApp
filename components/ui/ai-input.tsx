@@ -1,9 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
-import { AudioWaveform, Globe, Paperclip, Plus, Send } from "lucide-react"
+import {  Globe,  Send } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
@@ -74,7 +73,14 @@ const AnimatedPlaceholder = ({ showSearch }: { showSearch: boolean }) => (
   </AnimatePresence>
 )
 
-export function AiInput(props) {
+interface AiInputProps {
+  message: string;
+  setMessage: (message: string) => void;
+  handleChat: () => void;
+  handleStreamChat: () => void;
+}
+
+export function AiInput(props: AiInputProps) {
   const [value, setValue] = useState("")
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: MIN_HEIGHT,
